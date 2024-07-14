@@ -1,8 +1,9 @@
 import { zeros } from "../array";
+import { LayerOptions } from "../type/LayerOptions";
 import { Vol } from "../vol";
 import { BaseLayer } from "./BaseLayer";
 
-interface MaxoutLayerOptions {
+interface MaxoutLayerOptions extends LayerOptions {
   group_size?: number;
   in_sx?: number;
   in_sy?: number;
@@ -28,9 +29,9 @@ export class MaxoutLayer implements BaseLayer {
       typeof opt.group_size !== "undefined" ? opt.group_size : 2;
 
     // computed
-    this.out_sx = opt.in_sx!;
-    this.out_sy = opt.in_sy!;
-    this.out_depth = Math.floor(opt.in_depth! / this.group_size);
+    this.out_sx = opt.in_sx || NaN;
+    this.out_sy = opt.in_sy || NaN;
+    this.out_depth = Math.floor(opt.in_depth || NaN / this.group_size);
     this.layer_type = "maxout";
 
     this.switches = zeros(this.out_sx * this.out_sy * this.out_depth); // useful for backprop

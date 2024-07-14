@@ -1,8 +1,9 @@
 import { zeros } from "../array";
+import { LayerOptions } from "../type/LayerOptions";
 import { Vol } from "../vol";
 import { BaseLayer } from "./BaseLayer";
 
-interface SigmoidLayerOptions {
+interface SigmoidLayerOptions extends LayerOptions {
   in_sx?: number;
   in_sy?: number;
   in_depth?: number;
@@ -20,9 +21,9 @@ export class SigmoidLayer implements BaseLayer {
     opt = opt || {};
 
     // computed
-    this.out_sx = opt.in_sx!;
-    this.out_sy = opt.in_sy!;
-    this.out_depth = opt.in_depth!;
+    this.out_sx = opt.in_sx || NaN;
+    this.out_sy = opt.in_sy || NaN;
+    this.out_depth = opt.in_depth || NaN;
     this.layer_type = "sigmoid";
   }
 

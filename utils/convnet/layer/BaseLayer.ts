@@ -9,7 +9,8 @@ export abstract class BaseLayer {
   abstract layer_type: string;
 
   abstract forward(V: Vol, is_training?: boolean): Vol;
-  abstract backward(): void;
+  // for regression layer, we may have a y provided, that is the ground truth label
+  abstract backward(y?: any): void;
   abstract getParamsAndGrads(): Array<{
     params: number[] | Float64Array;
     grads: number[] | Float64Array;

@@ -1,4 +1,5 @@
 import { zeros } from "../array";
+import { LayerOptions } from "../type/LayerOptions";
 import { Vol } from "../vol";
 import { BaseLayer } from "./BaseLayer";
 
@@ -7,7 +8,7 @@ function tanh(x: number): number {
   return (y - 1) / (y + 1);
 }
 
-interface TanhLayerOptions {
+interface TanhLayerOptions extends LayerOptions {
   in_sx?: number;
   in_sy?: number;
   in_depth?: number;
@@ -25,17 +26,17 @@ export class TanhLayer implements BaseLayer {
     opt = opt || {};
 
     // computed
-    this.out_sx = opt.in_sx!;
-    this.out_sy = opt.in_sy!;
-    this.out_depth = opt.in_depth!;
+    this.out_sx = opt.in_sx || NaN;
+    this.out_sy = opt.in_sy || NaN;
+    this.out_depth = opt.in_depth || NaN;
     this.layer_type = "tanh";
   }
 
   forward(V: Vol, is_training: boolean) {
     this.in_act = V;
-    var V2 = V.cloneAndZero();
-    var N = V.w.length;
-    for (var i = 0; i < N; i++) {
+    const V2 = V.cloneAndZero();
+    const N = V.w.length;
+    for (let i = 0; i < N; i++) {
       V2.w[i] = tanh(V.w[i]);
     }
     this.out_act = V2;
@@ -43,12 +44,12 @@ export class TanhLayer implements BaseLayer {
   }
 
   backward() {
-    var V = this.in_act; // we need to set dw of this
-    var V2 = this.out_act;
-    var N = V.w.length;
+    const V = this.in_act; // we need to set dw of this
+    const V2 = this.out_act;
+    const N = V.w.length;
     V.dw = zeros(N); // zero out gradient wrt data
-    for (var i = 0; i < N; i++) {
-      var v2wi = V2.w[i];
+    for (let i = 0; i < N; i++) {
+      const v2wi = V2.w[i];
       V.dw[i] = (1.0 - v2wi * v2wi) * V2.dw[i];
     }
   }
@@ -58,7 +59,7 @@ export class TanhLayer implements BaseLayer {
   }
 
   toJSON() {
-    var json: Record<string, any> = {};
+    const json: Record<string, any> = {};
     json.out_depth = this.out_depth;
     json.out_sx = this.out_sx;
     json.out_sy = this.out_sy;
