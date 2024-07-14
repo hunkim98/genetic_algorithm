@@ -7,6 +7,8 @@ export abstract class BaseLayer {
   abstract in_act?: Vol;
   abstract out_act?: Vol;
   abstract layer_type: string;
+  abstract filters?: Vol[];
+  abstract biases?: Vol;
 
   abstract forward(V: Vol, is_training?: boolean): Vol;
   // for regression layer, we may have a y provided, that is the ground truth label

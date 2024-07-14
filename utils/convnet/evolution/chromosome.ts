@@ -1,12 +1,15 @@
 import { zeros } from "../array";
+import { BaseLayer } from "../layer/BaseLayer";
+import { Net } from "../net";
 import { randf, randi, randn } from "../random";
+import { Vol } from "../vol";
 
-class Chromosome {
+export class Chromosome {
   fitness: number = 0; // default value
   nTrial: number = 0; // number of trials subjected to so far.
-  gene: number[];
+  gene: number[] | Float64Array;
 
-  constructor(floatArray: number[]) {
+  constructor(floatArray: number[] | Float64Array) {
     this.gene = floatArray;
   }
 
@@ -61,7 +64,7 @@ class Chromosome {
     this.copyFromGene(c.gene);
   }
 
-  copyFromGene(gene: number[]): void {
+  copyFromGene(gene: number[] | Float64Array): void {
     // gene into itself
     const N: number = this.gene.length;
     for (let i = 0; i < N; i++) {
@@ -71,7 +74,7 @@ class Chromosome {
 
   clone(): Chromosome {
     // returns an exact copy of itself (into new memory, doesn't return reference)
-    const newGene: number[] = zeros(this.gene.length);
+    const newGene: number[] | Float64Array = zeros(this.gene.length);
     for (let i = 0; i < this.gene.length; i++) {
       newGene[i] = Math.round(10000 * this.gene[i]) / 10000;
     }
@@ -86,16 +89,45 @@ class Chromosome {
   }
 }
 
-function pushGeneToNetwork(net, gene) {
-  // pushes the gene (floatArray) to fill up weights and biases in net
-  var count = 0;
-  var layer = null;
-  var filter = null;
-  var bias = null;
-  var w = null;
-  var i, j, k;
+// counts the number of weights and biases in the network
+export function getNetworkSize(net: Net) {
+  let count = 0;
+  let layer: BaseLayer;
+  let filter: Array<Vol>;
+  let bias: Vol | undefined;
+  let w: number[] | Float64Array;
+  let i: number, j: number, k: number;
+
   for (i = 0; i < net.layers.length; i++) {
     layer = net.layers[i];
+    if (!layer.filters) continue;
+    filter = layer.filters;
+    if (filter) {
+      for (j = 0; j < filter.length; j++) {
+        w = filter[j].w;
+        count += w.length;
+      }
+    }
+    bias = layer.biases;
+    if (bias) {
+      w = bias.w;
+      count += w.length;
+    }
+  }
+  return count;
+}
+
+export function pushGeneToNetwork(net: Net, gene: number[] | Float64Array) {
+  // pushes the gene (floatArray) to fill up weights and biases in net
+  var count = 0;
+  let layer: BaseLayer;
+  let filter: Array<Vol>;
+  let bias: Vol | undefined;
+  let w: number[] | Float64Array;
+  let i: number, j: number, k: number;
+  for (i = 0; i < net.layers.length; i++) {
+    layer = net.layers[i];
+    if (!layer.filters) continue;
     filter = layer.filters;
     if (filter) {
       for (j = 0; j < filter.length; j++) {
@@ -105,6 +137,7 @@ function pushGeneToNetwork(net, gene) {
         }
       }
     }
+    if (!layer.biases) continue;
     bias = layer.biases;
     if (bias) {
       w = bias.w;
@@ -115,16 +148,18 @@ function pushGeneToNetwork(net, gene) {
   }
 }
 
-function getGeneFromNetwork(net) {
+export function getGeneFromNetwork(net: Net) {
   // gets all the weight/biases from network in a floatArray
-  var gene = [];
-  var layer = null;
-  var filter = null;
-  var bias = null;
-  var w = null;
-  var i, j, k;
+  var gene: number[] | Float64Array = [];
+  var count = 0;
+  let layer: BaseLayer;
+  let filter: Array<Vol>;
+  let bias: Vol | undefined;
+  let w: number[] | Float64Array;
+  let i: number, j: number, k: number;
   for (i = 0; i < net.layers.length; i++) {
     layer = net.layers[i];
+    if (!layer.filters) continue;
     filter = layer.filters;
     if (filter) {
       for (j = 0; j < filter.length; j++) {
@@ -134,6 +169,7 @@ function getGeneFromNetwork(net) {
         }
       }
     }
+    if (!layer.biases) continue;
     bias = layer.biases;
     if (bias) {
       w = bias.w;
