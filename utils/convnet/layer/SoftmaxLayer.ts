@@ -14,9 +14,9 @@ export class SoftmaxLayer implements BaseLayer {
   out_depth: number;
   out_sx: number;
   out_sy: number;
-  in_act: Vol;
-  out_act: Vol;
-  es: number[] | Float64Array;
+  in_act?: Vol;
+  out_act?: Vol;
+  es?: number[] | Float64Array;
   layer_type: string = "softmax";
 
   constructor(opt: SoftmaxLayerOptions) {
@@ -65,17 +65,17 @@ export class SoftmaxLayer implements BaseLayer {
 
   backward(y: number) {
     // compute and accumulate gradient wrt weights and bias of this layer
-    const x = this.in_act;
+    const x = this.in_act!;
     x.dw = zeros(x.w.length); // zero out the gradient of input Vol
 
     for (var i = 0; i < this.out_depth; i++) {
       const indicator = i === y ? 1.0 : 0.0;
-      const mul = -(indicator - this.es[i]);
+      const mul = -(indicator - this.es![i]);
       x.dw[i] = mul;
     }
 
     // loss is the class negative log likelihood
-    return -Math.log(this.es[y]);
+    return -Math.log(this.es![y]);
   }
 
   getParamsAndGrads() {

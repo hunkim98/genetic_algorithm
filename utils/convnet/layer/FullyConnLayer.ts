@@ -29,8 +29,8 @@ export class FullyConnLayer implements BaseLayer {
   out_sy: number;
   filters: Vol[];
   biases: Vol;
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
   layer_type: string = "fc";
 
   constructor(opt: FullyConnLayerOptions) {
@@ -83,13 +83,13 @@ export class FullyConnLayer implements BaseLayer {
   }
 
   backward() {
-    const V = this.in_act;
+    const V = this.in_act!;
     V.dw = zeros(V.w.length); // zero out the gradient in input Vol
 
     // compute gradient wrt weights and data
     for (let i = 0; i < this.out_depth; i++) {
       const tfi = this.filters[i];
-      const chain_grad = this.out_act.dw[i];
+      const chain_grad = this.out_act!.dw[i];
       for (let d = 0; d < this.num_inputs; d++) {
         V.dw[d] += tfi.w[d] * chain_grad; // grad wrt input data
         tfi.dw[d] += V.w[d] * chain_grad; // grad wrt params

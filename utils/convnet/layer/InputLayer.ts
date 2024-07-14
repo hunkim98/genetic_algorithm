@@ -16,8 +16,8 @@ export class InputLayer implements BaseLayer {
   out_sx: number;
   out_sy: number;
   out_depth: number;
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
   layer_type: string = "input";
 
   constructor(opt: InputLayerOptions) {

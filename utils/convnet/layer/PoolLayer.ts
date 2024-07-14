@@ -27,8 +27,8 @@ export class PoolLayer implements BaseLayer {
   switchx: number[] | Float64Array;
   switchy: number[] | Float64Array;
 
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
   layer_type: string = "pool";
 
   constructor(opt: PoolLayerOptions) {
@@ -107,7 +107,7 @@ export class PoolLayer implements BaseLayer {
   backward() {
     // pooling layers have no parameters, so simply compute
     // gradient wrt data here
-    const V = this.in_act;
+    const V = this.in_act!;
     V.dw = zeros(V.w.length); // zero out gradient wrt data
     const A = this.out_act; // computed in forward pass
 
@@ -118,7 +118,7 @@ export class PoolLayer implements BaseLayer {
       for (let ax = 0; ax < this.out_sx; x += this.stride, ax++) {
         y = -this.pad;
         for (let ay = 0; ay < this.out_sy; y += this.stride, ay++) {
-          const chain_grad = this.out_act.get_grad(ax, ay, d);
+          const chain_grad = this.out_act!.get_grad(ax, ay, d);
           V.add_grad(this.switchx[n], this.switchy[n], d, chain_grad);
           n++;
         }

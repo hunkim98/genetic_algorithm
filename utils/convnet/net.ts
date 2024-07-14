@@ -13,10 +13,11 @@ import { SigmoidLayer } from "./layer/SigmoidLayer";
 import { SoftmaxLayer } from "./layer/SoftmaxLayer";
 import { SVMLayer } from "./layer/SVMLayer";
 import { TanhLayer } from "./layer/TanhLayer";
+import { Vol } from "./vol";
 
-class Net {
+export class Net {
   layers: BaseLayer[];
-  constructor(options) {
+  constructor() {
     this.layers = [];
   }
 
@@ -163,7 +164,7 @@ class Net {
     }
   }
 
-  forward(V, is_training = false) {
+  forward(V: Vol, is_training = false) {
     let act = this.layers[0].forward(V, is_training);
     for (let i = 1; i < this.layers.length; i++) {
       act = this.layers[i].forward(act, is_training);
@@ -171,7 +172,7 @@ class Net {
     return act;
   }
 
-  getCostLoss(V, y) {
+  getCostLoss(V: Vol, y: any) {
     this.forward(V, false);
     const N = this.layers.length;
     // const loss = this.layers[N - 1].backward();
@@ -179,7 +180,7 @@ class Net {
     return loss;
   }
 
-  backward(y) {
+  backward(y: any) {
     const N = this.layers.length;
     // const loss = this.layers[N - 1].backward();
     const loss = this.layers[N - 1].backward(y);
@@ -207,7 +208,7 @@ class Net {
 
   getPrediction() {
     const S = this.layers[this.layers.length - 1];
-    const p = S.out_act.w;
+    const p = S.out_act!.w;
     let maxv = p[0];
     let maxi = 0;
     for (let i = 1; i < p.length; i++) {
@@ -230,7 +231,7 @@ class Net {
     return json;
   }
 
-  fromJSON(json) {
+  fromJSON(json: Record<string, any>) {
     this.layers = [];
     for (let i = 0; i < json.layers.length; i++) {
       const Lj = json.layers[i];
@@ -277,6 +278,10 @@ class Net {
       }
       if (t === "svm") {
         L = new SVMLayer({});
+      }
+      if (typeof L === "undefined") {
+        console.log("ERROR: UNRECOGNIZED LAYER TYPE!");
+        continue;
       }
       L.fromJSON(Lj);
       this.layers.push(L);

@@ -30,11 +30,11 @@ export class ConvLayer implements BaseLayer {
   l2_decay_mul: number;
   out_sx: number;
   out_sy: number;
-  layer_type: string;
   filters: Vol[];
   biases: Vol;
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
+  layer_type: string = "conv";
 
   constructor(opt: ConvLayerOptions) {
     opt = opt || {};
@@ -127,7 +127,7 @@ export class ConvLayer implements BaseLayer {
         for (let ay = 0; ay < this.out_sy; y += this.stride, ay++) {
           // convolve and add up the gradients.
           // could be more efficient, going for correctness first
-          const chain_grad = this.out_act.get_grad(ax, ay, d); // gradient from above, from chain rule
+          const chain_grad = this.out_act!.get_grad(ax, ay, d); // gradient from above, from chain rule
           for (let fx = 0; fx < f.sx; fx++) {
             for (let fy = 0; fy < f.sy; fy++) {
               for (let fd = 0; fd < f.depth; fd++) {

@@ -13,8 +13,8 @@ export class SigmoidLayer implements BaseLayer {
   out_sx: number;
   out_sy: number;
   out_depth: number;
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
   layer_type: string = "sigmoid";
 
   constructor(opt: SigmoidLayerOptions) {
@@ -41,8 +41,8 @@ export class SigmoidLayer implements BaseLayer {
   }
 
   backward() {
-    var V = this.in_act; // we need to set dw of this
-    var V2 = this.out_act;
+    var V = this.in_act!; // we need to set dw of this
+    var V2 = this.out_act!;
     var N = V.w.length;
     V.dw = zeros(N); // zero out gradient wrt data
     for (var i = 0; i < N; i++) {

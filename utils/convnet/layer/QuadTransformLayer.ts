@@ -16,8 +16,8 @@ export class QuadTransformLayer implements BaseLayer {
   out_sx: number;
   out_sy: number;
   out_depth: number;
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
   layer_type: string = "quadtransform";
 
   constructor(opt: QuadTransformLayerOptions) {
@@ -59,9 +59,9 @@ export class QuadTransformLayer implements BaseLayer {
   }
 
   backward() {
-    const V = this.in_act;
+    const V = this.in_act!;
     V.dw = zeros(V.w.length); // zero out gradient wrt data
-    const V2 = this.out_act;
+    const V2 = this.out_act!;
     const N = this.out_depth;
     const Ni = V.depth;
     for (let x = 0; x < V.sx; x++) {

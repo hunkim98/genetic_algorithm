@@ -14,8 +14,8 @@ export class SVMLayer implements BaseLayer {
   out_depth: number;
   out_sx: number;
   out_sy: number;
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
   layer_type: string = "svm";
 
   constructor(opt: SVMLayerOptions) {
@@ -38,7 +38,7 @@ export class SVMLayer implements BaseLayer {
 
   backward(y: number) {
     // compute and accumulate gradient wrt weights and bias of this layer
-    const x = this.in_act;
+    const x = this.in_act!;
     x.dw = zeros(x.w.length); // zero out the gradient of input Vol
 
     const yscore = x.w[y]; // score of ground truth

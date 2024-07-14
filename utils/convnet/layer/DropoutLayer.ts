@@ -16,8 +16,8 @@ export class DropoutLayer implements BaseLayer {
   out_depth: number;
   drop_prob: number;
   dropped: number[] | Float64Array;
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
   layer_type: string = "dropout";
 
   constructor(opt: DropoutLayerOptions) {
@@ -61,8 +61,8 @@ export class DropoutLayer implements BaseLayer {
   }
 
   backward() {
-    const V = this.in_act; // we need to set dw of this
-    const chain_grad = this.out_act;
+    const V = this.in_act!; // we need to set dw of this
+    const chain_grad = this.out_act!;
     const N = V.w.length;
     V.dw = zeros(N); // zero out gradient wrt data
     for (let i = 0; i < N; i++) {

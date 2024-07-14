@@ -13,8 +13,8 @@ export class ReluLayer implements BaseLayer {
   out_sx: number;
   out_sy: number;
   out_depth: number;
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
   layer_type: string = "relu";
 
   constructor(opt: ReluLayerOptions) {
@@ -40,8 +40,8 @@ export class ReluLayer implements BaseLayer {
   }
 
   backward() {
-    const V = this.in_act; // we need to set dw of this
-    const V2 = this.out_act;
+    const V = this.in_act!; // we need to set dw of this
+    const V2 = this.out_act!;
     const N = V.w.length;
     V.dw = zeros(N); // zero out gradient wrt data
     for (let i = 0; i < N; i++) {

@@ -4,8 +4,8 @@ export abstract class BaseLayer {
   abstract out_sx: number;
   abstract out_sy: number;
   abstract out_depth: number;
-  abstract in_act: Vol;
-  abstract out_act: Vol;
+  abstract in_act?: Vol;
+  abstract out_act?: Vol;
   abstract layer_type: string;
 
   abstract forward(V: Vol, is_training?: boolean): Vol;

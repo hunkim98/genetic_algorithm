@@ -14,8 +14,8 @@ export class MaxoutLayer implements BaseLayer {
   out_sx: number;
   out_sy: number;
   out_depth: number;
-  in_act: Vol;
-  out_act: Vol;
+  in_act?: Vol;
+  out_act?: Vol;
   layer_type: string = "maxout";
 
   group_size: number;
@@ -87,7 +87,7 @@ export class MaxoutLayer implements BaseLayer {
   }
 
   backward() {
-    const V = this.in_act; // we need to set dw of this
+    const V = this.in_act!; // we need to set dw of this
     const V2 = this.out_act!;
     const N = this.out_depth;
     V.dw = zeros(V.w.length); // zero out gradient wrt data
