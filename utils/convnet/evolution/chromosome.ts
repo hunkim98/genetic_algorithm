@@ -13,11 +13,16 @@ export class Chromosome {
     this.gene = floatArray;
   }
 
+  // burst mutate is a special function that adds a random variable to each gene
+  // it is different from randomize in that it adds a random variable to the gene
+  // while randomize resets the gene to a random value
   burst_mutate(burst_magnitude_: number): void {
     // adds a normal random variable of stdev width, zero mean to each gene.
     const burst_magnitude: number = burst_magnitude_ || 0.1;
     const N: number = this.gene.length;
     for (let i = 0; i < N; i++) {
+      // you can see that the gene is mutated by adding a random variable to it
+      // this means that the mean of the gene is not zero but actually the value of the original gene
       this.gene[i] += randn(0.0, burst_magnitude);
     }
   }
@@ -27,10 +32,14 @@ export class Chromosome {
     const burst_magnitude: number = burst_magnitude_ || 0.1;
     const N: number = this.gene.length;
     for (let i = 0; i < N; i++) {
+      // we are setting the gene to a random value
       this.gene[i] = randn(0.0, burst_magnitude);
     }
   }
 
+  // the difference of mutate to burst_mutate is that mutate has a probability of mutation_rate
+  // this means that not all genes will be mutated
+  // while burst_mutate mutates all genes
   mutate(mutation_rate_: number, burst_magnitude_: number): void {
     // adds random gaussian (0,stdev) to each gene with prob mutation_rate
     const mutation_rate: number = mutation_rate_ || 0.1;
@@ -64,6 +73,7 @@ export class Chromosome {
     this.copyFromGene(c.gene);
   }
 
+  // the element in the gene array is actually the weight/bias of the network
   copyFromGene(gene: number[] | Float64Array): void {
     // gene into itself
     const N: number = this.gene.length;
@@ -90,6 +100,7 @@ export class Chromosome {
 }
 
 // counts the number of weights and biases in the network
+// this will be used to create a chromosome of the right size
 export function getNetworkSize(net: Net) {
   let count = 0;
   let layer: BaseLayer;
@@ -117,6 +128,8 @@ export function getNetworkSize(net: Net) {
   return count;
 }
 
+// pushGeneToNetwork pushes the gene (floatArray) to fill up weights and biases in net
+// this means that the gene elements are the weights and biases of the network
 export function pushGeneToNetwork(net: Net, gene: number[] | Float64Array) {
   // pushes the gene (floatArray) to fill up weights and biases in net
   var count = 0;
@@ -127,6 +140,7 @@ export function pushGeneToNetwork(net: Net, gene: number[] | Float64Array) {
   let i: number, j: number, k: number;
   for (i = 0; i < net.layers.length; i++) {
     layer = net.layers[i];
+    // if the layer has no filters, then it is not a convolutional layer
     if (!layer.filters) continue;
     filter = layer.filters;
     if (filter) {
