@@ -24,12 +24,12 @@ export class Particle {
     this.p = p;
     this.loc =
       loc ||
-      p.createVector(
+      new p5.Vector(
         p.random((-REF_W * 1) / 4, (REF_W * 1) / 4),
         p.random(REF_W / 4, (REF_W * 3) / 4)
       );
     this.prevLoc = this.loc.copy();
-    this.v = v || p.createVector(p.random(-20, 20), p.random(10, 25));
+    this.v = v || new p5.Vector(p.random(-20, 20), p.random(10, 25));
     this.r = r || p.random(0.5, 1.5);
     this.c = c || getRandomColor(this.p, 128);
   }
@@ -101,7 +101,7 @@ export class Particle {
   }
 
   bounce(p: Particle) {
-    const ab = this.p.createVector();
+    const ab = new p5.Vector();
     ab.set(this.loc);
     ab.sub(p.loc);
     ab.normalize();
