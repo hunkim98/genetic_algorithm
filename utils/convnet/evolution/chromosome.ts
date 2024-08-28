@@ -93,7 +93,7 @@ export class Chromosome {
     return c;
   }
 
-  pushToNetwork(net: any): void {
+  pushToNetwork(net: Net): void {
     // pushes this chromosome to a specified network
     pushGeneToNetwork(net, this.gene);
   }

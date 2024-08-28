@@ -25,11 +25,15 @@ export class GATrainer {
   private best_trial: number;
   private num_match: number;
   private chromosome_size: number;
-  private chromosomes: Chromosome[];
+  public chromosomes: Chromosome[];
   private bestFitness: number;
   private bestFitnessCount: number;
 
-  constructor(net: Net, options_?: GATrainerOptions, initGene?: number[]) {
+  constructor(
+    net: Net,
+    options_?: GATrainerOptions,
+    initGene?: number[] | Float64Array
+  ) {
     this.net = net;
 
     const options = options_ || {};
