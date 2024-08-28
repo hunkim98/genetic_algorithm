@@ -8,8 +8,8 @@ export function toX(x: number): number {
 export function toP(x: number): number {
   return x * FACTOR;
 }
-export function toY(y: number): number {
-  return REF_H - y * FACTOR;
+export function toY(p: p5, y: number): number {
+  return p.height - y * FACTOR;
 }
 
 export function getRandom(min: number, max: number): number {

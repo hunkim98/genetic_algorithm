@@ -183,8 +183,8 @@ export class Agent {
     const ballFactor = 1.0;
     const startX2 = REF_W / 4 - ballFactor * radius * (brain.nGameOutput / 2);
     const secondLayerY = Math.max(
-      (REF_H * 1) / 8 + toP(radius) + 0.5 * toP(radius),
-      (REF_H * 3) / 16
+      (this.p.height * 1) / 8 + toP(radius) + 0.5 * toP(radius),
+      (this.p.height * 3) / 16
     );
 
     this.actionIntensity[0] += this.action.forward ? 16 : 0;
@@ -197,7 +197,7 @@ export class Agent {
         this.p.fill(r, g, b, brain.inputState[i] * 32 + 8);
         this.p.ellipse(
           toX((startX + i * radius) * this.dir),
-          (REF_H * 1) / 8 + toP(radius),
+          (this.p.height * 1) / 8 + toP(radius),
           toP(radius * factor),
           toP(radius * factor)
         );
@@ -207,7 +207,7 @@ export class Agent {
             this.p.stroke(r, g, b, brain.inputState[i] * 32);
             this.p.line(
               toX((startX + i * radius) * this.dir),
-              (REF_H * 1) / 8 + toP(radius),
+              (this.p.height * 1) / 8 + toP(radius),
               toX((startX2 + ballFactor * j * radius) * this.dir),
               secondLayerY + (ballFactor + 0) * toP(radius)
             );
@@ -265,7 +265,14 @@ export class Agent {
     if (this.dir === 1) angle = 135;
     this.p.noStroke();
     this.p.fill(this.c);
-    this.p.arc(toX(x), toY(y), toP(r) * 2, toP(r) * 2, Math.PI, 2 * Math.PI);
+    this.p.arc(
+      toX(x),
+      toY(this.p, y),
+      toP(r) * 2,
+      toP(r) * 2,
+      Math.PI,
+      2 * Math.PI
+    );
 
     var ballX = this.game.ball.loc.x - (x + 0.6 * r * fastCos(angle));
     var ballY = this.game.ball.loc.y - (y + 0.6 * r * fastSin(angle));
@@ -280,14 +287,14 @@ export class Agent {
     this.p.fill(255);
     this.p.ellipse(
       toX(x + 0.6 * r * fastCos(angle)),
-      toY(y + 0.6 * r * fastSin(angle)),
+      toY(this.p, y + 0.6 * r * fastSin(angle)),
       toP(r) * 0.6,
       toP(r) * 0.6
     );
     this.p.fill(0);
     this.p.ellipse(
       toX(x + 0.6 * r * fastCos(angle) + eyeX * 0.15 * r),
-      toY(y + 0.6 * r * fastSin(angle) + eyeY * 0.15 * r),
+      toY(this.p, y + 0.6 * r * fastSin(angle) + eyeY * 0.15 * r),
       toP(r) * 0.2,
       toP(r) * 0.2
     );
@@ -312,7 +319,7 @@ export class Agent {
       this.p.text(
         this.score,
         this.dir === -1 ? (size * 3) / 4 : this.p.width - size / 4,
-        size / 2 + REF_H / 3
+        size / 2 + this.p.height / 3
       );
     }
   }

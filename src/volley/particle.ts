@@ -136,7 +136,7 @@ export class Particle {
     this.p.fill(this.c);
     this.p.ellipse(
       toX(this.loc.x),
-      toY(this.loc.y),
+      toY(this.p, this.loc.y),
       toP(this.r) * 2,
       toP(this.r) * 2
     );
