@@ -24,6 +24,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["src", "types"],
+  "include": ["src", "types", "utils"],
   "exclude": ["node_modules"]
 }
